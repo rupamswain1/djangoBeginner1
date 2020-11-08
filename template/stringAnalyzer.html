@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>String Analyzer</title>
+</head>
+<body>
+    <h1>Enter the String in Below Text Box</h1>
+    <form action=stringAnalyzer name=analyze method="post">
+        {% csrf_token %}
+        <textarea name=stringText style="width: 1218px; height: 200px;"></textarea> <br><br>
+        <h2>Text Analysis Options</h2>
+        <input type='checkbox' name='removeSpace'>
+        <label for='removeSpace'>Remove all Spaces from Text</label><br>
+        <input type='checkbox' name='capitalizeFirst'>
+        <label for='capitalizeFirst'>Capitalize first letter of Word</label><br>
+        <input type='checkbox' name='wordCounter'>
+        <label for='wordCounter'>Show Number of occurance of each word</label><br>
+        <input type='checkbox' name='alphabetCounter'>
+        <label for='alphabetCounter'>Count the occurance of Alphabet</label><br><br>
+        <input type='submit' name='analyzeButton', id=btn_analyze, value='Analyze String'>        
+    </form>
+    {% if stringDataKey == "" %}
+    {{'Enter Text in Text Box'}}
+    {% else %}
+   
+    <table style="width:100%" border='1px'>
+        <tr>
+            <th>Header</th>
+        </tr>
+        <tr> 
+            <td>
+                Data
+            </td>    
+         </tr>    
+    </table>
+    {{stringDataKey}}
+    {% endif %}
+</body>
+</html>
