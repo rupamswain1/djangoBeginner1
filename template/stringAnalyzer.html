@@ -21,21 +21,24 @@
         <label for='alphabetCounter'>Count the occurance of Alphabet</label><br><br>
         <input type='submit' name='analyzeButton', id=btn_analyze, value='Analyze String'>        
     </form>
+   
     {% if stringDataKey == "" %}
     {{'Enter Text in Text Box'}}
     {% else %}
    
     <table style="width:100%" border='1px'>
-        <tr>
-            <th>Header</th>
-        </tr>
-        <tr> 
-            <td>
-                Data
-            </td>    
-         </tr>    
+        {% for x,y in dataMaps %}
+            <tr>
+                <th>{{x}}</th>
+            </tr>
+            <tr> 
+                <td>
+                    {{y}}
+                </td>    
+            </tr>   
+            {% endfor %} 
     </table>
-    {{stringDataKey}}
+        
     {% endif %}
 </body>
 </html>
