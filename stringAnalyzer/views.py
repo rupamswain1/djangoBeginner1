@@ -23,16 +23,16 @@ def stringAnalyzer(request):
                 tempList=stringData.split()
                 processed=""
                 for text in tempList:
-                    processed=processed+text.capitalize()
+                    processed=processed+text.capitalize()+" "
                 dataMap['capitalizeFirst']=processed
             if wordCounter=='on':
                 wordCount={}
                 for t in stringData.split():
                     if t in wordCount:
-                        wordCounter[t]=int(wordCount[t])+1
+                        wordCount[t]=int(wordCount[t])+int(1)
                     else:
-                        wordCount[t]=int(1);
-                dataMap['wordCounter']=wordCount
+                        wordCount[t]=int(1)
+                dataMap['wordCounter']=wordCount.items()
             if alphabetCounter=='on':
                 alpahCount={}
                 for a in range(0, len(stringData)):
@@ -41,8 +41,8 @@ def stringAnalyzer(request):
                     else: 
                         if(stringData[int(a)] !=" "):
                            alpahCount[stringData[int(a)]]=1
-                dataMap['alphaCount']=alpahCount
+                dataMap['alphaCount']=alpahCount.items()
             dataMap['stringDataKey']=stringData
         context = {'dataMaps': dataMap.items()}
-
+        print(len(stringData))
         return render(request,'stringAnalyzer.html',context)
