@@ -15,11 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from . import urls
+from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('',include('stringAnalyzer.urls')),
-    path('ecomm/',include('EcommerceWebsite.urls')),
-    path('blog/',include('Blog.urls')),
+    path("",views.ecommHome,name='ecommHome')
 ]

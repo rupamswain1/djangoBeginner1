@@ -33,6 +33,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'stringAnalyzer.apps.StringanalyzerConfig',
+    'Blog.apps.BlogConfig',
+    'EcommerceWebsite.apps.EcommercewebsiteConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -56,7 +58,7 @@ ROOT_URLCONF = 'djangoBeginner1.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'template')],
+        'DIRS': [os.path.join(BASE_DIR,'template'),os.path.join(BASE_DIR,'Blog/template'),os.path.join(BASE_DIR,'EcommerceWebsite/template')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
