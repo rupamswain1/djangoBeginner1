@@ -1,0 +1,3 @@
+username: django123
+Email: django@django.com
+password: django123

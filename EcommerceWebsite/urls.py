@@ -18,5 +18,9 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path("",views.ecommHome,name='ecommHome')
+    path("",views.ecommHome,name='ecommHome'),
+    path("cart/",views.ecommCart,name='ecommCart'),
+    path("aboutUs/",views.ecommAboutUs, name='ecommAboutUs'),
+    path("contactUs/",views.ecommContactUs, name='ecommContactUs'),
+    path("productPage/",views.ecommProductPage,name='ecommProductPage'),
 ]
