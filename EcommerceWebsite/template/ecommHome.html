@@ -51,7 +51,7 @@ bottom: auto;
     <!--carousel indicators starts from here-->
     {% for k,v in all_prod%}
     <div class="container">
-      <h4>{{k}}</h4>
+      <h4 class='my-4'>{{k}}</h4>
       <div id="demo{{k}}" class="carousel slide my-3" data-ride="carousel">
         <ul class="carousel-indicators">
           <li data-target="#demo{{k}}" data-slide-to="0" class="active"></li>
@@ -70,7 +70,7 @@ bottom: auto;
                       <h5 class="card-title">{{i.product_name|truncatechars:20}}</h5>
                       <p class="card-text">{{i.product_description|truncatechars:100}}</p>
                       <p class="card-text">&#x20B9 {{i.product_price}}</p>
-                      <a href="#" class="btn btn-primary">Add To Cart</a>
+                      <button id={{i.product_name}} href="#" class="btn btn-primary cart">Add To Cart</button>
                     </div>
                   </div>
                 </div>
@@ -95,4 +95,30 @@ bottom: auto;
     {% endfor %}
 {% endblock%}
 </div>
+{% block js %}
+<script>
+  if(localStorage.getItem('cart')==null){
+    var cart={};
+  }
+  else{
+    cart=JSON.parse(localStorage.getItem('cart'));
+  }
+  $('.cart').click(function(){
+    console.log('clicked');
+    var idstr=this.id.toString();
+    console.log(idstr)
+    if (cart[idstr]!=undefined){
+    cart[idstr]=cart[idstr]+1;
+    }
+    else{
+      cart[idstr]=1;
+    }
+    console.log(cart);
+    localStorage.setItem('cart',JSON.stringify(cart))
+  }
+  
 
+  );
+
+</script>
+{% endblock %}
