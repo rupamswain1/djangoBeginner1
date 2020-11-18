@@ -14,11 +14,10 @@
       background-color: blue;
         }
 
-      .col-md-3 img{
-
-      width: 227px;
-      max-height: 242px;
-      }
+        .col-md-3 img{
+          width: 170px;
+         height: 200px;
+          }
 
       body .carousel-indicator li{
       background-color: blue;
@@ -38,6 +37,11 @@
       top: auto;
 bottom: auto;
       }
+      .carousel-control-prev,
+      .carousel-control-next{
+        padding-top : 222px;
+
+      }
        body .no-padding{
        padding-left: 0,
        padding-right: 0;
@@ -52,7 +56,8 @@ bottom: auto;
     {% for k,v in all_prod%}
     <div class="container">
       <h4 class='my-4'>{{k}}</h4>
-      <div id="demo{{k}}" class="carousel slide my-3" data-ride="carousel">
+      <div class='row'>
+      <div id="demo{{k}}" class="col carousel slide my-3" data-ride="carousel">
         <ul class="carousel-indicators">
           <li data-target="#demo{{k}}" data-slide-to="0" class="active"></li>
           {% for i in v.1 %}
@@ -93,6 +98,7 @@ bottom: auto;
         <span class="sr-only">Next</span>
       </a>
     {% endfor %}
+  </div>
 {% endblock%}
 </div>
 {% block js %}
@@ -115,6 +121,8 @@ bottom: auto;
     }
     console.log(cart);
     localStorage.setItem('cart',JSON.stringify(cart))
+   
+    document.getElementById('cart').innerHTML=Object.keys(cart).length
   }
   
 
