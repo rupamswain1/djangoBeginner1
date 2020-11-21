@@ -11,3 +11,12 @@ class Product(models.Model):
     
     def __str__(self):
         return self.product_name
+
+class ContactUsResponse(models.Model):
+    name=models.CharField(max_length=100)
+    phoneNumber=models.IntegerField(max_length=13)
+    email=models.CharField(max_length=100)
+    message=models.CharField(max_length=5000)
+    subject=models.CharField(max_length=500)
+    def __str__(self):
+        return self.name+"_"+self.subject

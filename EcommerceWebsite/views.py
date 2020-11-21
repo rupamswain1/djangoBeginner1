@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Product
+from .models import Product, ContactUsResponse
 #utilities
 def slideCounter(l):
     slides=0
@@ -45,11 +45,23 @@ def ecommCart(request):
     return HttpResponse("Cart")
 
 def ecommAboutUs(request):
-    return HttpResponse("About US")
+    return render(request,'aboutUs.html')
 
 def ecommContactUs(request):
-    return HttpResponse("Contact Us")
-
+    if request.method=='GET':
+        return render(request,'contactUs.html')
+    else:
+        name=request.POST.get('name')
+        phoneNumber=request.POST.get('phoneNumber',None)
+        email=request.POST.get('email',None)
+        message=request.POST.get('message', None)
+        subject=request.POST.get('subject',None)
+        flag=False
+        if(name!=None and phoneNumber!=None and email!=None and message!=None and subject!=None):
+            contactUs=ContactUsResponse(name=name, phoneNumber=phoneNumber,email=email,message=message,subject=subject)
+            contactUs.save()
+            flag=True
+        return render(request,'contactUs.html',{'saved':flag,'name':name})
 def ecommProductPage(request,product_id):
     product=Product.objects.get(id=product_id)
 
