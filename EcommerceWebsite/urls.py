@@ -22,5 +22,5 @@ urlpatterns = [
     path("cart/",views.ecommCart,name='ecommCart'),
     path("aboutUs/",views.ecommAboutUs, name='ecommAboutUs'),
     path("contactUs/",views.ecommContactUs, name='ecommContactUs'),
-    path("productPage/",views.ecommProductPage,name='ecommProductPage'),
+    path("productPage/<int:product_id>",views.ecommProductPage,name='ecommProductPage'),
 ]

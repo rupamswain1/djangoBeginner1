@@ -50,5 +50,7 @@ def ecommAboutUs(request):
 def ecommContactUs(request):
     return HttpResponse("Contact Us")
 
-def ecommProductPage(request):
-    return HttpResponse("Product Page")
+def ecommProductPage(request,product_id):
+    product=Product.objects.get(id=product_id)
+
+    return render(request,'productPage.html',{'product':product})
