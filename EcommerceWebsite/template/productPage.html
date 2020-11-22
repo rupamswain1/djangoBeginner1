@@ -15,7 +15,9 @@
                
                 <div class='row'>
                     <button type="button" class="btn btn-warning mx-3">Buy Now</button>
-                    <button type="button" class="btn btn-primary">Add to Cart</button>
+                    <span id='divpr{{product.id}}'class='divpr'>
+                      <button id=addToCart{{product.id}} href='#' class='btn btn-primary addToCart'>Add To Cart</button>
+                    </span>
                 </div>
 
              </div>
@@ -33,31 +35,94 @@
 {% endblock %}
 {% block js %}
 <script>
-    if(localStorage.getItem('cart')==null){
-      var cart={};
+  if(localStorage.getItem('cart')==null){
+    var cart={};
+  }
+  else{
+    cart=JSON.parse(localStorage.getItem('cart'));
+    updateAddToCart(cart)
+    updateCart(cart)
+  }
+ //on clicking add to cart button, update cart value
+ $('.divpr').on("click", "button.addToCart",function(){
+  //$('.cart').click(function(){
+    console.log('clicked');
+    var idstr=this.id.toString().replace("addToCart","");
+    console.log(idstr)
+    if (cart[idstr]!=undefined){
+    cart[idstr]=cart[idstr]+1;
     }
     else{
-      cart=JSON.parse(localStorage.getItem('cart'));
+      cart[idstr]=1;
     }
-    $('.cart').click(function(){
-      console.log('clicked');
-      var idstr=this.id.toString();
-      console.log(idstr)
-      if (cart[idstr]!=undefined){
-      cart[idstr]=cart[idstr]+1;
-      }
-      else{
-        cart[idstr]=1;
-      }
-      console.log(cart);
-      localStorage.setItem('cart',JSON.stringify(cart))
-     
-      
-      
+    console.log(cart);
+    updateCart(cart)
+    updateAddToCart(cart)
+  }
+  );
+ 
+  //when a product is added to cart, minus button will be displayed, clicking on minus will reduce the cart items, if cart item becomes zero, it will change button to add to cart
+  $('.divpr').on("click", "button.minus",function(){
+    var minId=this.id.toString();
+    var res=minId.split("-")
+    cart[res[1]]=cart[res[1]]-1
+    console.log(cart)
+    if(cart[res[1]]<=0){
+      console.log('divpr'+res[1])
+      document.getElementById('divpr'+res[1]).innerHTML="<button type='button' id='addToCart"+res[1]+"' href='#'' class='btn btn-primary addToCart'>Add To Cart</button>"
+      delete cart[res[1].toString]
+      console.log(cart)
+      updateCart(cart)  
+       
     }
-    );
-    document.getElementById('cart').innerHTML=Object.keys(cart).length
-    $('#popCart').popover()
-    document.getElementById('popCart').setAttribute('data-content',Object.keys(cart).length+' Items in your Cart')
-  </script>
+    else{
+    updateCartNumbers(res[1])
+    }
+  });
+  //when a product is added to cart, plus button will be displayed, it will increase the quantity in cart
+  $('.divpr').on("click", "button.plus",function(){
+    var minId=this.id.toString();
+    var res=minId.split("-")
+    cart[res[1]]=cart[res[1]]+1
+    console.log(cart);
+    updateCartNumbers(res[1])   
+    //updateCart(cart);
+
+  });
+  //it will update the item numbers, both in label between minus and plus and in cart
+  function updateCartNumbers(prodId){
+      var tempId='update-'+prodId;
+      console.log(tempId)
+      document.getElementById(tempId).innerHTML=cart[prodId]
+      updateCart(cart)
+  }
+//Updates add to cart button
+  function updateAddToCart(cart){
+    for(var item in cart){
+      if(item=={{product.id}}){
+        if(cart[item]>0){
+          document.getElementById('divpr'+item).innerHTML="<button type='button' class='btn btn-primary minus' id='minus-"+item+"'>-</button><span class='mx-1' id='update-"+item+"'>"+cart[item]+"</span><button type='button' class='btn btn-primary plus' id='plus-"+item+"'>+</button>"     
+    
+        }
+      }
+  }
+
+  };
+  //updates cart count
+  function updateCart(cart){
+    var item=0
+    var prod=0
+    for (var m in cart){
+      item=item+cart[m]
+      if(cart[m]>0){
+        prod=prod+1
+      }
+    }
+    localStorage.setItem('cart',JSON.stringify(cart))
+    document.getElementById('cart').innerHTML=item
+    document.getElementById('popCart').setAttribute('data-content',prod+' Products in your Cart and '+item+' quantities')
+    $('#popCart').popover('show')
+  };
+  $('#popCart').popover()
+</script>
 {% endblock %}
