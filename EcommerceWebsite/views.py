@@ -41,8 +41,9 @@ def ecommHome(request):
     
     return render(request,'ecommHome.html', {'all_prod':category_dict.items()})
 
-def ecommCart(request):
-    return HttpResponse("Cart")
+def ecommCart(request,product_id):
+    product=Product.objects.get(id=product_id)
+    return render(request,'cart.html',{'item':product})
 
 def ecommAboutUs(request):
     return render(request,'aboutUs.html')

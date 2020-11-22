@@ -20,3 +20,10 @@ class ContactUsResponse(models.Model):
     subject=models.CharField(max_length=500)
     def __str__(self):
         return self.name+"_"+self.subject
+
+class cartItem(models.Model):
+    cutomer_id=models.CharField(max_length=100)
+    product_id=models.IntegerField()
+    product_quantity=models.IntegerField()
+    def __str__(self):
+        return self.cutomer_id+"_"+self.product_id+"_"+self.product_quantity
