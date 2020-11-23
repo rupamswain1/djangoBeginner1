@@ -3,19 +3,35 @@
 {% block title %}
 Cart
 {% endblock %}
+{%block css %}
+    <style>
+     
+        .cartImg{
+          width: 150px;
+         height: 150px;
+          }
 
+     
+    </style>
+{% endblock%}
 {% block body %}
-    {{item}}
     <div class='container'>
         <ol class="list-unstyled">
+          {% for item in cartItem %}
             <li class="media">
-              <img src="/media/{{item.product_image}}" class="mr-3" alt="...">
+              <div class="card align-items-center mx-3" style="width: 18rem;">
+                <img src="/media/{{item.product_data.product_image}}" class="card-img-top cartImg" alt="...">
+                <div class="card-body">
+                  <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+              </div>
               <div class="media-body">
-                <h5 class="mt-0 mb-1">List-based media object</h5>
-                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                <a href="/ecomm/productPage/{{item.product_data.id}}"><h5 class="mt-0 mb-1" id={{item.product_data.id}}>{{item.product_data.product_name}}</h5></a>
+                {{item.product_data.product_description|truncatechars:500}}
               </div>
             </li>
-           
+            <br><br>
+           {% endfor %}
         </ol>
     </div>
 {% endblock %}

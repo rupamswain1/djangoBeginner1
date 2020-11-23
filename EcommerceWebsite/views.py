@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Product, ContactUsResponse
+from .models import Product, ContactUsResponse, CartItem
+
 #utilities
 def slideCounter(l):
     slides=0
@@ -41,9 +42,32 @@ def ecommHome(request):
     
     return render(request,'ecommHome.html', {'all_prod':category_dict.items()})
 
-def ecommCart(request,product_id):
-    product=Product.objects.get(id=product_id)
-    return render(request,'cart.html',{'item':product})
+def ecommCart(request,product_id, operation):
+    if operation=='addToCart':
+        product=Product.objects.get(id=product_id)
+        cart=CartItem.objects.filter(product_id=product_id)
+        if(len(cart)==0):
+             cart =CartItem(customer_id=1234, product_id=product.id, product_quantity=1)
+        else:
+            cart=CartItem.objects.get(product_id=product_id)
+            cart.product_quantity=cart.product_quantity+1
+        cart.save()
+        cart=CartItem.objects.filter(customer_id=1234).order_by('-product_add_time')
+        
+        cartItem=[]
+        tempList={}
+        for obj in cart:
+            id=obj.product_id
+            #print(id)
+            tempList={}
+            prod=Product.objects.filter(id=id)
+            tempList['product_data']=prod[0]
+            tempList['product_quantity']=obj.product_quantity
+            tempList['product_add_time']=obj.product_add_time
+            cartItem.append(tempList)
+            
+       
+    return render(request,'cart.html',{'cartItem':cartItem})
 
 def ecommAboutUs(request):
     return render(request,'aboutUs.html')
