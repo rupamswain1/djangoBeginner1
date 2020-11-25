@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Product, ContactUsResponse, CartItem
-
+import json
 #utilities
 def slideCounter(l):
     slides=0
@@ -91,3 +91,16 @@ def ecommProductPage(request,product_id):
     product=Product.objects.get(id=product_id)
 
     return render(request,'productPage.html',{'product':product})
+
+def cart(request):
+    if request.method=='POST':
+        print(request.POST.get('a'))
+        if request.is_ajax():
+            ourid = json.loads(request.body)
+            print(ourid)
+        else:
+            html = '<p>This is not ajax</p>'      
+            return HttpResponse(html)
+        print(request.POST.get('addToCart-btn'))
+        return HttpResponse('orderId')
+   

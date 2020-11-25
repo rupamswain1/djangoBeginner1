@@ -76,8 +76,8 @@ bottom: auto;
                       <p class="card-text">{{i.product_description|truncatechars:100}}</p>
                       <p class="card-text">&#x20B9 {{i.product_price}}</p>
                       <span id='divpr{{i.id}}'class='divpr'>
-                      <form method="POST" id=addform{{i.id}}>{% csrf_token %}
-                        <a id=addToCart{{i.id}} href='cart/{{i.id}}/addToCart' name='addToCart-btn' class='btn btn-primary addToCart'>Add To Cart</a>
+                      <form method="POST" id=addToCartForm class='addform{{i.id}}'>{% csrf_token %}
+                        <button type='submit' id=addToCart{{i.id}} href='#' name='addToCart-btn' class='btn btn-primary addToCart'>Add To Cart</button>
                         <a id='quickView{{i.id}}' href="productPage/{{i.id}}" class="btn btn-warning quickView">Quick View</a>
                       </form>
                       </span>
@@ -107,3 +107,38 @@ bottom: auto;
   </div>
 {% endblock%}
 </div>
+{% block js%}
+  <script>
+    var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+    var formData={}
+    $('#addToCartForm').submit(function(event){
+      console.log('done232')  
+      var formData={
+          'orderId': $('button[name=addToCart-btn]').data("id"),
+          'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+        }
+
+    });
+    $.ajax({
+      
+      type:'POST',
+      url: '/ecomm/cart/',
+      headers:{
+        "X-CSRFToken": csrftoken
+      },
+      data:{'a':'100'},
+      encode:true,
+      traditional: true,
+      dataType: 'html',
+      success: function(result){
+          $('#addToCartForm').append(result);
+          }
+
+    })
+    .done(function(data){
+      console.log('done')
+    })
+    ;
+
+  </script>
+{% endblock %}
