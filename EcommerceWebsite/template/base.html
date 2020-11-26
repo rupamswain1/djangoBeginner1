@@ -51,7 +51,7 @@
           </form>
           <button type="button" class="btn btn-lg btn-danger mx-2" data-html="true" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Vivamus
           sagittis lacus vel augue laoreet rutrum faucibus." id='popCart'>
-          Cart (<span id='cart'>0</span>)
+          Cart (<span id='cart'>{% block cartItems %}{% endblock %}</span>)
           </button>
         </div>
       </nav>

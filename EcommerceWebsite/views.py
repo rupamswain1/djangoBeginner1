@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Product, ContactUsResponse, CartItem
+from django.forms.models import model_to_dict
 import json
 #utilities
 def slideCounter(l):
@@ -31,6 +32,11 @@ def ecommHome(request):
         dict_list.append(category_list)
         dict_list.append(range(0,slideCounter(len(category_list))))
         category_dict[k]=dict_list
+    cartItem=CartItem.objects.filter(customer_id=1234)
+    items=0
+    for c in cartItem:
+        items=items+c.product_quantity
+ 
               
 
     #slides=0
@@ -40,7 +46,7 @@ def ecommHome(request):
     #product_data['product']=product
     #product_data['prange']=range(1,slides)
     
-    return render(request,'ecommHome.html', {'all_prod':category_dict.items()})
+    return render(request,'ecommHome.html', {'all_prod':category_dict.items(),'cartItem':items})
 
 def ecommCart(request,product_id, operation):
     if operation=='addToCart':
@@ -94,13 +100,33 @@ def ecommProductPage(request,product_id):
 
 def cart(request):
     if request.method=='POST':
-        print(request.POST.get('a'))
-        if request.is_ajax():
-            ourid = json.loads(request.body)
-            print(ourid)
+        id_of_addToCart_btn=request.POST.get('orderId')
+       
+        product=Product.objects.get(id=id_of_addToCart_btn)
+        cart=CartItem.objects.filter(product_id=id_of_addToCart_btn)
+        if(len(cart)==0):
+             cart =CartItem(customer_id=1234, product_id=product.id, product_quantity=1)
         else:
-            html = '<p>This is not ajax</p>'      
-            return HttpResponse(html)
-        print(request.POST.get('addToCart-btn'))
-        return HttpResponse('orderId')
+            cart=CartItem.objects.get(product_id=id_of_addToCart_btn)
+            cart.product_quantity=cart.product_quantity+1
+        cart.save()
+        cart=CartItem.objects.filter(customer_id=1234).order_by('-product_add_time')
+        
+        cartItem=[]
+        tempList={}
+        for obj in cart:
+            id=obj.product_id
+            #print(id)
+            tempList={}
+            prod=Product.objects.get(id=id)
+            #print(model_to_dict(prod))
+            tempList['product_data']=model_to_dict(prod)
+            tempList['product_quantity']=obj.product_quantity
+            tempList['product_add_time']=obj.product_add_time
+            cartItem.append(tempList)
+        response= json.dumps(cartItem, default=str)
+        return HttpResponse(response)
+    elif request.method=='GET':
+        return render(request,'cart.html')
+    
    
