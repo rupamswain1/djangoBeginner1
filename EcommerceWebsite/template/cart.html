@@ -16,7 +16,7 @@ Cart
 {% endblock%}
 {% block body %}
     <div class='container'>
-        <ol class="list-unstyled">
+        <ul class="list-unstyled">
           <span id='allCart' class='allCart'>
             <li class="media">
               <div class="card align-items-center mx-3" style="width: 18rem;">
@@ -32,17 +32,29 @@ Cart
             </li>
             <br><br>
           </span>
-        </ol>
+        </ul>
     </div>
 {% endblock %}
  {% block js%}
     <script>
       var cart=JSON.parse(sessionStorage.getItem('cartData'))
-      console.log(cart)
-      sessionStorage.removeItem('cartData')
-      displayCart=""
+      
+      //sessionStorage.removeItem('cartData')
+      var displayCart=""
+      for(var i=0;i<cart.length;i++){
+        
+       // for (var p in cart[i]){
+          console.log(cart[i]['product_data']['product_name']);  
+          displayCart=displayCart+"<li class='media "+cart[i]['product_data']['id']+"'><div class='card align-items-center mx-3' style='width: 18rem;'> <img src='/media/"+cart[i]['product_data']['product_image']+"' class='card-img-top pull-left cartImg'><div class='card-body'><a href='#' class='btn btn-primary plus "+cart[i]['product_data']['id']+"' id='plus "+cart[i]['product_data']['id']+"'>+</a><span class='quantity "+cart[i]['product_data']['id']+" mx-1' id='quantity "+cart[i]['product_data']['id']+"'>"+cart[i]['product_quantity']+"</span><a href='#' class='btn btn-primary minus"+cart[i]['product_data']['id']+"' id='minus "+cart[i]['product_data']['id']+"'>-</a><a href='#' class='btn btn-secondary mx-3 removeItem "+cart[i]['product_data']['id']+"' id='removeItem "+cart[i]['product_data']['id']+"'>Remove</a></div></div><div class='media-body mx-8'><a href='/ecomm/productPage/"+cart[i]['product_data']['id']+"'><h5 class='mt-0 mb-1' id='"+cart[i]['product_data']['id']+"'>"+cart[i]['product_data']['product_name']+"</h5></a>"+cart[i]['product_data']['product_description']+"</div></li><br>"
+      
+        //}
+          //for(var q in cart[i][p]){
+         // console.log(cart[i][p][q]);}
+        //}
+      }
       for (item in cart){
-        displayCart=displayCart+"<li class='media'"+item['product_data']['id']+"'><div class='card align-items-center mx-3' style='width: 18rem;'> <img src='/media/"+item['product_data']['product_image']+"' class='card-img-top cartImg'><div class='card-body'><a href='#' class='btn btn-primary"+item['product_data']['product_image']+"'>Go somewhere</a></div></div><div class='media-body'><a href='/ecomm/productPage/"+item['product_data']['id']+"'><h5 class='mt-0 mb-1' id='"+item['product_data']['id']+"'>{{item.product_data.product_name}}</h5></a>'"+item['product_data']['product_description']+"'</div></li>"
+        console.log(item)
+        
       }
       document.getElementById('allCart').innerHTML=displayCart 
     </script>

@@ -139,7 +139,13 @@ bottom: auto;
         })
         .done(function(data){
           
-          sessionStorage.setItem('cartData',data)
+          if(sessionStorage.getItem('cartData')!=undefined){
+             sessionStorage.setItem('cartData',data)
+          }
+          else{
+            sessionStorage.removeItem('cartData')
+            sessionStorage.setItem('cartData',data)
+          }
           //sessionStorage.getItem('cartData')
           //console.log(sessionStorage.getItem('cartData'))
           window.location.href = '/ecomm/cart/'
