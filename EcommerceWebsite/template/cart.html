@@ -16,13 +16,13 @@ Cart
 {% endblock%}
 {% block body %}
     <div class='container'>
-        <ul class="list-unstyled">
+        <ul class="list-unstyled">{% csrf_token %}
           <span id='allCart' class='allCart'>
             <li class="media">
               <div class="card align-items-center mx-3" style="width: 18rem;">
                 <img src="#" class="card-img-top cartImg" alt="...">
                 <div class="card-body">
-                  <a href="#" class="btn btn-primary">Go somewhere</a>
+                  <a href="#" class="btn btn-primary">CheckOut</a>
                 </div>
               </div>
               <div class="media-body">
@@ -37,25 +37,135 @@ Cart
 {% endblock %}
  {% block js%}
     <script>
-      var cart=JSON.parse(sessionStorage.getItem('cartData'))
-      
-      //sessionStorage.removeItem('cartData')
-      var displayCart=""
-      for(var i=0;i<cart.length;i++){
-        
-       // for (var p in cart[i]){
-          console.log(cart[i]['product_data']['product_name']);  
-          displayCart=displayCart+"<li class='media "+cart[i]['product_data']['id']+"'><div class='card align-items-center mx-3' style='width: 18rem;'> <img src='/media/"+cart[i]['product_data']['product_image']+"' class='card-img-top pull-left cartImg'><div class='card-body'><a href='#' class='btn btn-primary plus "+cart[i]['product_data']['id']+"' id='plus "+cart[i]['product_data']['id']+"'>+</a><span class='quantity "+cart[i]['product_data']['id']+" mx-1' id='quantity "+cart[i]['product_data']['id']+"'>"+cart[i]['product_quantity']+"</span><a href='#' class='btn btn-primary minus"+cart[i]['product_data']['id']+"' id='minus "+cart[i]['product_data']['id']+"'>-</a><a href='#' class='btn btn-secondary mx-3 removeItem "+cart[i]['product_data']['id']+"' id='removeItem "+cart[i]['product_data']['id']+"'>Remove</a></div></div><div class='media-body mx-8'><a href='/ecomm/productPage/"+cart[i]['product_data']['id']+"'><h5 class='mt-0 mb-1' id='"+cart[i]['product_data']['id']+"'>"+cart[i]['product_data']['product_name']+"</h5></a>"+cart[i]['product_data']['product_description']+"</div></li><br>"
-      
-        //}
-          //for(var q in cart[i][p]){
-         // console.log(cart[i][p][q]);}
-        //}
+    updateCartPage()
+    function updateCartPage(){
+        var cart=JSON.parse(sessionStorage.getItem('cartData'))
+        //sessionStorage.removeItem('cartData')
+        var displayCart=""
+        for(var i=0;i<cart.length;i++){
+          
+        // for (var p in cart[i]){
+          // console.log(cart[i]['product_data']['product_name']);  
+            displayCart=displayCart+"\
+            <li class='media "+cart[i]['product_data']['id']+"' id='media-"+cart[i]['product_data']['id']+"'>\
+              <div class='card align-items-center mx-3' style='width: 18rem;'>\
+                <img src='/media/"+cart[i]['product_data']['product_image']+"' class='card-img-top pull-left cartImg' id='img-"+cart[i]['product_data']['id']+"'>\
+                <div class='card-body'>\
+                  <span id='spncartProduct"+cart[i]['product_data']['id']+"' class='cartProduct'>\
+                      <span id='spnPlus' class=spnPlus>\
+                        <button href='#' class='btn btn-primary plus "+cart[i]['product_data']['id']+"' id='plus-"+cart[i]['product_data']['id']+"'>+</button>\
+                      </span>\
+                      <span class='quantity-"+cart[i]['product_data']['id']+" mx-1' id='quantity-"+cart[i]['product_data']['id']+"'>"+cart[i]['product_quantity']+"</span>\
+                      <span id='spnMinus' class=spnMinus>\
+                        <button href='#' class='btn btn-primary minus "+cart[i]['product_data']['id']+"' id='minus-"+cart[i]['product_data']['id']+"'>-</button>\
+                      </span>\
+                      <span id='removeItem' class=removeItem>\
+                        <button href='#' class='btn btn-secondary mx-3 removeItem "+cart[i]['product_data']['id']+"' id='removeItem-"+cart[i]['product_data']['id']+"'>Remove</button>\
+                      </span>\
+                    </span>\
+                </div>\
+                </div>\
+                <div class='media-body mx-8'><a href='/ecomm/productPage/"+cart[i]['product_data']['id']+"'>\
+                <h5 class='mt-0 mb-1' id='"+cart[i]['product_data']['id']+"'>"+cart[i]['product_data']['product_name']+"</h5></a>"+cart[i]['product_data']['product_description']+"\
+              </div>\
+            </li><br>"
       }
-      for (item in cart){
-        console.log(item)
-        
+      document.getElementById('allCart').innerHTML=displayCart
+    }
+    $('.spnPlus').on('click', 'button.plus', function(){
+        csrfToken=$("[name=csrfmiddlewaretoken]").val();
+        var id=this.id;
+        $.ajax({
+           type:'POST',
+           url:'/ecomm/cart/',
+           headers:{
+             "X-CSRFToken":csrfToken,
+           },
+           data:{'prodId': this.id.split("-")[1],'operation':'add'},
+           encode:true,
+           traditional:true,
+           dataType:'html',
+           
+        })
+        .done(function(data){
+          if(sessionStorage.getItem('cartData')!=undefined){
+            sessionStorage.setItem('cartData',data)
+         }
+         else{
+           sessionStorage.removeItem('cartData')
+           sessionStorage.setItem('cartData',data)
+         } 
+          var qty=document.getElementById('quantity-'+id.split('-')[1]).innerHTML;
+          document.getElementById('quantity-'+id.split('-')[1]).innerHTML=parseInt(qty)+1;
+        });
+
+    });
+    $('.spnMinus').on('click', 'button.minus', function(event){
+       var csrfToken=$("[name=csrfmiddlewaretoken]").val();
+       var id=this.id
+      $.ajax({
+         type:'POST',
+         url:'/ecomm/cart/',
+         headers:{
+          "X-CSRFToken":csrfToken,
+        },
+         data:{'prodId':this.id.split("-")[1],'operation':'sub','remove':false},
+         encode:true,
+         traditional:true,
+         dataType:'html'
+      })
+      .done(function(data){
+        var qty=document.getElementById('quantity-'+id.split('-')[1]).innerHTML;
+        qty=qty-1
+        if(qty>0){
+          document.getElementById('quantity-'+id.split('-')[1]).innerHTML=parseInt(qty)
+        }
+        else{
+          if(sessionStorage.getItem('cartData')!=undefined){
+            sessionStorage.setItem('cartData',data)
+          }
+          else{
+           sessionStorage.removeItem('cartData')
+           sessionStorage.setItem('cartData',data)
+          } 
+          var qty=document.getElementById('quantity-'+id.split('-')[1]).innerHTML;
+          
+          $('#spncartProduct'+id.split('-')[1]).empty();
+          //document.getElementById('img-'+id.split('-')[1]).remove();
+          document.getElementById('media-'+id.split('-')[1]).remove();
+          
+        }
+        });
+        event.preventDefault();
+        });
+      
+
+    
+    $('.removeItem').on('click', 'button.removeItem', function(){
+      var csrfToken=$("[name=csrfmiddlewaretoken]").val();
+      var id=this.id
+      $.ajax({ type:'POST',
+      url:'/ecomm/cart/',
+      headers:{
+       "X-CSRFToken":csrfToken,
+     },
+      data:{'prodId':this.id.split("-")[1],'operation':'sub','remove':'true'},
+      encode:true,
+      traditional:true,
+      dataType:'html'
+    })
+    .done(function(data){
+      if(sessionStorage.getItem('cartData')!=undefined){
+        sessionStorage.setItem('cartData',data)
       }
-      document.getElementById('allCart').innerHTML=displayCart 
+      else{
+       sessionStorage.removeItem('cartData')
+       sessionStorage.setItem('cartData',data)
+      } 
+      console.log('media-'+id.split('-')[1])
+      document.getElementById('media-'+id.split('-')[1]).remove();
+    });
+
+    });
     </script>
  {% endblock %}

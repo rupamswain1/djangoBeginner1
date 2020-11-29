@@ -117,8 +117,8 @@ bottom: auto;
     $('.divpr').on('click','button.addToCart',function() {
        
       var formData={
-          'orderId': this.id.replace('addToCart',""),
-          'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val()
+          'prodId': this.id.replace('addToCart',""),
+          //'csrfmiddlewaretoken': $("[name=csrfmiddlewaretoken]").val()
         }
 
         $.ajax({
@@ -128,7 +128,7 @@ bottom: auto;
           headers:{
             "X-CSRFToken": csrftoken
           },
-          data:{'orderId':formData['orderId']},
+          data:{'prodId':formData['prodId'],'operation':'add'},
           encode:true,
           traditional: true,
           dataType: 'html',

@@ -100,30 +100,57 @@ def ecommProductPage(request,product_id):
 
 def cart(request):
     if request.method=='POST':
-        id_of_addToCart_btn=request.POST.get('orderId')
-       
-        product=Product.objects.get(id=id_of_addToCart_btn)
-        cart=CartItem.objects.filter(product_id=id_of_addToCart_btn)
-        if(len(cart)==0):
-             cart =CartItem(customer_id=1234, product_id=product.id, product_quantity=1)
-        else:
-            cart=CartItem.objects.get(product_id=id_of_addToCart_btn)
-            cart.product_quantity=cart.product_quantity+1
-        cart.save()
-        cart=CartItem.objects.filter(customer_id=1234).order_by('-product_add_time')
-        
+        id_of_addToCart_btn=request.POST.get('prodId')
+        operation=request.POST.get('operation')
         cartItem=[]
-        tempList={}
-        for obj in cart:
-            id=obj.product_id
-            #print(id)
+        if operation=='add':
+            product=Product.objects.get(id=id_of_addToCart_btn)
+            cart=CartItem.objects.filter(product_id=id_of_addToCart_btn)
+            if(len(cart)==0):
+                cart =CartItem(customer_id=1234, product_id=product.id, product_quantity=1)
+            else:
+                cart=CartItem.objects.get(product_id=id_of_addToCart_btn)
+                cart.product_quantity=cart.product_quantity+1
+            cart.save()
+            cart=CartItem.objects.filter(customer_id=1234).order_by('-product_add_time')
+            
+            
             tempList={}
-            prod=Product.objects.get(id=id)
-            #print(model_to_dict(prod))
-            tempList['product_data']=model_to_dict(prod)
-            tempList['product_quantity']=obj.product_quantity
-            tempList['product_add_time']=obj.product_add_time
-            cartItem.append(tempList)
+            for obj in cart:
+                id=obj.product_id
+                #print(id)
+                tempList={}
+                prod=Product.objects.get(id=id)
+                #print(model_to_dict(prod))
+                tempList['product_data']=model_to_dict(prod)
+                tempList['product_quantity']=obj.product_quantity
+                tempList['product_add_time']=obj.product_add_time
+                cartItem.append(tempList)
+        elif operation=='sub':
+            cart=CartItem.objects.filter(product_id=id_of_addToCart_btn)
+            if(len(cart)>0):
+                if(request.POST.get('remove')=='true'):
+                    CartItem.objects.filter(product_id=id_of_addToCart_btn).delete()
+                else:
+                    cart=CartItem.objects.get(product_id=id_of_addToCart_btn)
+                    cart.product_quantity=cart.product_quantity-1
+                    if cart.product_quantity==0:
+                        print('product deleted')
+                        CartItem.objects.filter(product_id=id_of_addToCart_btn).delete()
+                    else:
+                        cart.save()
+                cart=cart=CartItem.objects.filter(customer_id=1234).order_by('-product_add_time')
+                tempList={}
+                for obj in cart:
+                    id=obj.product_id
+                    #print(id)
+                    tempList={}
+                    prod=Product.objects.get(id=id)
+                    #print(model_to_dict(prod))
+                    tempList['product_data']=model_to_dict(prod)
+                    tempList['product_quantity']=obj.product_quantity
+                    tempList['product_add_time']=obj.product_add_time
+                    cartItem.append(tempList)
         response= json.dumps(cartItem, default=str)
         return HttpResponse(response)
     elif request.method=='GET':
