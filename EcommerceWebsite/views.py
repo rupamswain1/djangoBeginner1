@@ -36,16 +36,7 @@ def ecommHome(request):
     items=0
     for c in cartItem:
         items=items+c.product_quantity
- 
-              
 
-    #slides=0
-   # l=len(product)
-    #slides=self.slideCounter(l)
-    #product_data['slides']=slides
-    #product_data['product']=product
-    #product_data['prange']=range(1,slides)
-    
     return render(request,'ecommHome.html', {'all_prod':category_dict.items(),'cartItem':items})
 
 def ecommCart(request,product_id, operation):
@@ -156,4 +147,36 @@ def cart(request):
     elif request.method=='GET':
         return render(request,'cart.html')
     
-   
+def searchProduct(request):
+    result=0
+    query=request.GET.get('Search').lower()
+    product_data={}
+    product=Product.objects.all()
+    category_dict={}
+    category_list=[]
+    items=0
+    errorMsg=""
+    if len(query.replace(' ',''))>=3:
+        for p in product:
+            category_dict[p.product_category]=" "
+        for k,v in category_dict.items():
+            category_list=[]
+            cat_slide=0
+            dict_list=[]
+            for p in product:
+                if k==p.product_category:
+                    if ((query in k.lower()) or (query in p.product_name.lower()) or (query in p.product_description.lower())):
+                        category_list.append(p)
+                        result=result+1
+            dict_list.append(category_list)
+            dict_list.append(range(0,slideCounter(len(category_list))))
+            category_dict[k]=dict_list
+        
+        cartItem=CartItem.objects.filter(customer_id=1234)
+        
+        for c in cartItem:
+            items=items+c.product_quantity
+    else:
+        errorMsg='Pease enter the Search criteria consisting more than 3 letters'
+
+    return render(request,'search.html', {'all_prod':category_dict.items(),'cartItem':items,'searchTerm':request.GET.get('Search'),'productFound':result,'errorMsg':errorMsg})
