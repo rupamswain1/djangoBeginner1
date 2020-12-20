@@ -180,3 +180,9 @@ def searchProduct(request):
         errorMsg='Pease enter the Search criteria consisting more than 3 letters'
 
     return render(request,'search.html', {'all_prod':category_dict.items(),'cartItem':items,'searchTerm':request.GET.get('Search'),'productFound':result,'errorMsg':errorMsg})
+
+def login(request):
+    pass
+    
+def logout(request):
+    pass

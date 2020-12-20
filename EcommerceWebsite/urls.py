@@ -24,5 +24,7 @@ urlpatterns = [
     path("contactUs/",views.ecommContactUs, name='ecommContactUs'),
     path("productPage/<int:product_id>",views.ecommProductPage,name='ecommProductPage'),
     path("cart/", views.cart,name='cart'),
-    path("search/", views.searchProduct, name='searchProduct')
+    path("search/", views.searchProduct, name='searchProduct'),
+    path("login", views.login, name='login'),
+    path("logout", views.logout, name='logout')
 ]
