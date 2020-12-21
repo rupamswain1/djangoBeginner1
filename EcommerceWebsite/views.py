@@ -182,7 +182,7 @@ def searchProduct(request):
     return render(request,'search.html', {'all_prod':category_dict.items(),'cartItem':items,'searchTerm':request.GET.get('Search'),'productFound':result,'errorMsg':errorMsg})
 
 def login(request):
-    pass
+    return render(request,'login.html')
     
 def logout(request):
     pass

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <!-- Button trigger modal -->
+    <div class="card text-center">
+        <div class="card-header">
+          <h3>Login</h3>
+        </div>
+        <div class="card-body">
+          <form method="POST" action='login'>{% csrf_token %}
+                    
+        </form>
+        <form>
+            <div class="row mb-3 container">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+              <div class="col-sm-10">
+                <input type="email" class="form-control" id="inputEmail3">
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
+              <div class="col-sm-10">
+                <input type="password" class="form-control" id="inputPassword3">
+              </div>
+            </div>
+           
+            
+            <button type="submit" class="btn btn-primary">Sign in</button>
+          <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+        <div class="card-footer text-muted">
+          2 days ago
+        </div>
+      </div>
+  
+{% endblock %}
