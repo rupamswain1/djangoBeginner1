@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block title %} Register Yourself {% endblock %}
+
+{% block body %}
+{% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-danger" role="alert">
+        {{message}}
+    </div>
+    {% endfor %}
+{% endif %}
+<br>
+<div class='container'>
+<h3><center>Register Yourself!!</center></h3>
+</div>
+<form class="row g-3" method="POST" action="/ecomm/register">{% csrf_token %}
+    <div class='container'>
+    <div class="row">
+        <div class="col">
+          <input type="text" class="form-control" placeholder="First name" aria-label="First name" name="firstName" id='firstName' required>
+        </div>
+        <div class="col">
+          <input type="text" class="form-control" placeholder="Last name" aria-label="Last name" id='lastName' name="lastName" required>
+        </div>
+      </div>
+      <br>
+      <div class='row'>
+        <div class="col">
+            <input type="text" class="form-control" placeholder="Email" aria-label="Email" id='email' name="email" required>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col">
+          <input type="password" class="form-control" placeholder="password" aria-label="password" id='password' name="password" required>
+        </div>
+        <div class="col">
+          <input type="password" class="form-control" placeholder="ConfirmPassword" aria-label="cofirmPassword" id='confirmPassword' name="confirmPassword" required>
+        </div>
+      </div>
+      <br>
+      <h4>Address: </h4>
+      <br>
+      <div class="row">
+        <div class="col">
+          <input type="text" class="form-control" id='flatNo' laceholder="Flat No:" aria-label="flatNo" name="flatNo" required>
+        </div>
+        <div class="col">
+          <input type="text" class="form-control" id='street' placeholder="Street" aria-label="Street" name="street" required>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col">
+          <input type="text" class="form-control" id='city' placeholder="State" aria-label="state" name="state" required>
+        </div>
+        <div class="col">
+          <input type="text" class="form-control" id='city' placeholder="City" aria-label="City" name="city" required>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col">
+            <center>
+            <button type="submit" class="btn btn-success">Register</button>
+            </center>
+        </div>
+     </div>
+    </div>
+    
+</form>
+
+{% endblock %}

@@ -1,6 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Product, ContactUsResponse, CartItem
+from .models import Product, ContactUsResponse, CartItem, CustomerDetail
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.contrib.auth import login
 from django.forms.models import model_to_dict
 import json
 #utilities
@@ -181,8 +184,45 @@ def searchProduct(request):
 
     return render(request,'search.html', {'all_prod':category_dict.items(),'cartItem':items,'searchTerm':request.GET.get('Search'),'productFound':result,'errorMsg':errorMsg})
 
-def login(request):
-    return render(request,'login.html')
-    
-def logout(request):
+def user_login(request):
+    if request.method=='GET':
+        return render(request,'login.html')
+    else:
+        pass
+def user_logout(request):
     pass
+
+def register(request):
+    if request.method=="GET":
+        return render(request,'register.html')
+    else:
+        first_name=request.POST['firstName']
+        last_name=request.POST["lastName"]
+        email=request.POST["email"]
+        password=request.POST["password"]
+        confirm_password=request.POST["confirmPassword"]
+        flat_no=request.POST["flatNo"]
+        street=request.POST["street"]
+        city=request.POST["city"]
+
+        #validate if email already exists
+        try:
+            user=User.objects.get(email=email,username=email)
+        except User.DoesNotExist:
+            user=None
+        if user!=None:
+            messages.error(request,"Email "+email+" already exists")
+            return render(request,'register.html')
+        else:
+            if(password==confirm_password):
+                user=User.objects.create_user(first_name=first_name,last_name=last_name,email=email,username=email,password=password)
+                customer_detail=CustomerDetail(customer_id=user, flat_no=flat_no, Street=street,city=city)
+                customer_detail.save()
+                login(request,user)
+                messages.success(request,"Registration Successfull")
+                return redirect("/ecomm")
+            else:
+                messages.error(request,"Password and Confirm password not matching")
+                return render(request,'register.html')
+
+

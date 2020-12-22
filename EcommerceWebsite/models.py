@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
 class Product(models.Model):
    
@@ -29,3 +29,10 @@ class CartItem(models.Model):
     def __str__(self):
         name=str(self.customer_id)+"_"+str(self.product_id)+"_"+str(self.product_quantity) 
         return name
+class CustomerDetail(models.Model):
+    customer_id=models.ForeignKey(User, on_delete=models.CASCADE)
+    flat_no=models.TextField()
+    Street=models.TextField()
+    city=models.TextField()
+    def __str__(self):
+        return self.customer_id.email
