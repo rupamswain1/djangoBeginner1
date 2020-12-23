@@ -53,10 +53,20 @@
           sagittis lacus vel augue laoreet rutrum faucibus." id='popCart'>
           Cart (<span id='cart'>{% block cartItems %}{% endblock %}</span>)
           </button>
-        <form class="form-inline my-2 my-lg-0" action="login">
-          <button type="submit" class="btn btn-primary">Login</button>
-        </form>                  
-
+        {% if user.is_authenticated %}
+          <li class="nav-item dropdown">
+            <button class="nav-link dropdown-toggle btn btn-info" href="#" id="loginOptions" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Hello!! {{user.first_name}}
+            </button>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="logout">Logout</a>
+            </div>
+          </li>
+        {% else %}
+          <form class="form-inline my-2 my-lg-0" action="login">
+            <button type="submit" class="btn btn-primary">Login</button>
+          </form>                  
+        {% endif %}
         </div>
       </nav>
       <!--Nav Bar Ends--> 

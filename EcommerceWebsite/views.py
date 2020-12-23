@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from .models import Product, ContactUsResponse, CartItem, CustomerDetail
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate, logout
 from django.forms.models import model_to_dict
 import json
 #utilities
@@ -188,9 +188,18 @@ def user_login(request):
     if request.method=='GET':
         return render(request,'login.html')
     else:
-        pass
+        login_email=request.POST['loginEmail']
+        password=request.POST['loginPassword']
+        user=authenticate(username=login_email, password=password)
+        if user is not None:
+            login(request,user)
+            return redirect('/ecomm')
+        else:
+            messages.error(request,"Email or Password is Invalid")
+            return render(request, 'login.html')
 def user_logout(request):
-    pass
+    logout(request)
+    return redirect("/ecomm")
 
 def register(request):
     if request.method=="GET":
@@ -224,5 +233,6 @@ def register(request):
             else:
                 messages.error(request,"Password and Confirm password not matching")
                 return render(request,'register.html')
-
+def review(request,prod_id):
+    pass
 

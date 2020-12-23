@@ -30,8 +30,15 @@
         </div>
         </div>
     </div>
-
-
+  <form method='POST' action='review/{{product.id}}'>  
+    <div class='container mx-12'>  
+      <div class="mb-3">
+        <label for="comment-{{product.id}}" class="form-label">Write your Review</label>
+        <input type="text" class="form-control" id="comment-{{product.id}}" placeholder="Your Review">
+      </div>
+      <button type="submit" class="btn btn-primary">Submit Review</button>
+    </div>
+</form>
 {% endblock %}
 {% block js %}
 <script>
